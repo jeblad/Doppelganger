@@ -1,15 +1,16 @@
 {
-	"name": "jeblad/expect",
+	"name": "jeblad/doppelganger",
 	"type": "mediawiki-extension",
-	"description": "Provides basic functionality to do expectations of modules in Mediawiki.",
+	"description": "Provides basic functionality to create test stubs and doubles for modules in Mediawiki.",
 	"keywords": [
 		"wiki",
 		"MediaWiki",
 		"extension",
-		"expectation",
-		"Expect"
+		"doppelganger",
+		"test stubs",
+		"test doubles"
 	],
-	"homepage": "https://www.mediawiki.org/wiki/Extension:Expect",
+	"homepage": "https://www.mediawiki.org/wiki/Extension:Doppelganger",
 	"license": "GPL-2.0",
 	"authors": [
 		{
@@ -19,8 +20,8 @@
 		}
 	],
 	"support": {
-		"wiki": "https://www.mediawiki.org/wiki/Extension:Expect",
-		"forum": "https://www.mediawiki.org/wiki/Extension_talk:Expect",
+		"wiki": "https://www.mediawiki.org/wiki/Extension:Doppelganger",
+		"forum": "https://www.mediawiki.org/wiki/Extension_talk:Doppelganger",
 		"source": "https://git.wikimedia.org/tree/mediawiki%2Fextensions%2FBootstrap",
 		"issues": "https://phabricator.wikimedia.org/project/view/2053/",
 		"irc": "irc://irc.freenode.org/mediawiki"
@@ -48,13 +49,13 @@
 			"minus-x fix ."
 		],
 		"ldoc": [
-			"ldoc includes/LuaLibrary/lua/pure/expect.lua --testing --unqualified --template ./ --config ./config.ld"
+			"ldoc includes/LuaLibrary/lua/pure/doppelganger.lua --testing --unqualified --template ./ --config ./config.ld"
 		],
 		"minify": [
 			"find modules/images -type d -path minified -prune -o -type d -execdir svgo --pretty --indent=2 -i . -o ./minified \\;"
 		],
 		"unit": [
-			"php ../../tests/phpunit/phpunit.php --wiki wiki --group Expect"
+			"php ../../tests/phpunit/phpunit.php --wiki wiki --group Doppelganger"
 		],
 		"codesize": [
 			"phpmd ./includes/ text codesize",
