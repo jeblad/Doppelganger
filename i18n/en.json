@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jeblad"
+		]
+	},
+	"doppelganger-desc": "Provides test stubs and doubles to Lua modules"
+}
