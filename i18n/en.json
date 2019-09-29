@@ -4,5 +4,5 @@
 			"Jeblad"
 		]
 	},
-	"doppelganger-desc": "Provides test stubs and doubles to Lua modules"
+	"doppelganger-desc": "Provides test stubs and doubles for use in Lua modules"
 }
