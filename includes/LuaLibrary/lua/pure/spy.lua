@@ -1,4 +1,4 @@
---- Baseclass for spies.
+--- Class for spies.
 -- @module Spy
 
 -- pure libs
@@ -24,7 +24,6 @@ function meta:__call( text )
 	return self:eval( text )
 end
 
-
 --- Internal creator function.
 -- @local
 -- @tparam varargs ... functions kept as callbacks, everything else as data for callback
@@ -37,7 +36,7 @@ local function makeSpy( ... )
 	-- @local
 	-- @function checkSelf
 	-- @raise if called from a method not part of self
-	local checkSelf = makeCheckSelfFunction( 'doppelganger', 'obj', obj, 'spy object' )
+	local checkSelf = makeCheckSelfFunction( 'spy', 'obj', obj, 'spy object' )
 
 	-- keep in closure
 	local _callbacks = {}
@@ -58,7 +57,7 @@ local function makeSpy( ... )
 	-- @treturn self
 	function obj:eval( text )
 		checkSelf( self, 'eval' )
-		checkType( 'spy object', 1, text, 'string', true )
+		checkType( 'spy:eval', 1, text, 'string', true )
 		local t = { text }
 		for _,v in ipairs( _callbacks ) do
 			v( t, unpack( _data ) )
@@ -73,8 +72,8 @@ local function makeSpy( ... )
 	-- @treturn self
 	function obj:addCallback( func, index )
 		checkSelf( self, 'eval' )
-		checkType( 'spy object', 1, func, 'function', false )
-		checkType( 'spy object', 2, index, 'number', true )
+		checkType( 'spy:addCallback', 1, func, 'function', false )
+		checkType( 'spy:addCallback', 2, index, 'number', true )
 		if index then
 			table.insert( _callbacks, index, func )
 		else
@@ -90,8 +89,8 @@ local function makeSpy( ... )
 	-- @treturn self
 	function obj:log( text, level )
 		checkSelf( self, 'log' )
-		checkType( 'spy object', 1, text, 'string', true )
-		checkType( 'spy object', 2, level, 'number', true )
+		checkType( 'spy:log', 1, text, 'string', true )
+		checkType( 'spy:log', 2, level, 'number', true )
 		local f = function( t )
 			local tmp = { text }
 			for _,v in ipairs( t ) do
@@ -115,8 +114,8 @@ local function makeSpy( ... )
 	-- @treturn self
 	function obj:raise( text, level )
 		checkSelf( self, 'raise' )
-		checkType( 'spy object', 1, text, 'string', true )
-		checkType( 'spy object', 2, level, 'number', true )
+		checkType( 'spy:raise', 1, text, 'string', true )
+		checkType( 'spy:raise', 2, level, 'number', true )
 		local f = function( t )
 			local tmp = { text }
 			for _,v in ipairs( t ) do
