@@ -4,5 +4,9 @@
 			"Jeblad"
 		]
 	},
-	"doppelganger-desc": "Provides test stubs and doubles for use in Lua modules"
+	"doppelganger-desc": "Provides test stubs and doubles for use in Lua modules",
+	"doppelganger-carp-final": "carp called",
+	"doppelganger-cluck-final": "cluck called",
+	"doppelganger-croak-final": "croak called",
+	"doppelganger-confess-final": "confess called"
 }
