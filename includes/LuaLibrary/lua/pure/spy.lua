@@ -17,6 +17,7 @@ local Meta = {}
 
 --- Instance is callable.
 -- This call may not return at all.
+-- Redirects to objects eval method.
 -- @tparam string text for a last minute message
 -- @treturn self
 function Meta:__call( str )
@@ -37,6 +38,7 @@ local function makeSpy( ... )
 	local _callbacks = {}
 	local _data = {}
 
+	-- dispatch on type
 	for _,v in ipairs( { ... } ) do
 		if type( v ) == 'function' then
 			table.insert( _callbacks, v )
@@ -45,39 +47,76 @@ local function makeSpy( ... )
 		end
 	end
 
-	--- Evaluate
+	--- Evaluate graph.
+	-- @tparam nil|string str to be reported on evaluation of the compute grap
+	-- @treturn self
 	function obj:eval( str )
 		checkSelf( self, 'eval' )
 		checkType( 'spy object', 1, str, 'string', true )
 		local t = { str }
-		for _,v in ipairs( ) do
+		for _,v in ipairs( _callbacks ) do
 			v( t, unpack( _data ) )
 		end
-		return obj
+		return self
 	end
 
-	--- Log a traceback
+	--- Add a callback.
+	-- @tparam func to be registered on the compute graph.
+	-- @tparam nil|pos to inject the callbak
+	-- @treturn self
+	function obj:addCallback( func, pos )
+		checkSelf( self, 'eval' )
+		checkType( 'spy object', 1, func, 'function', false )
+		checkType( 'spy object', 2, pos, 'number', true )
+		if pos then
+			table.insert( _callbacks, pos, func )
+		else
+			table.insert( _callbacks, func )
+		end
+		return self
+	end
+
+	--- Log a traceback.
+	-- @tparam nil|string str to be reported on evaluation of the compute grap
+	-- @tparam nil|number lvl to start reporting
+	-- @treturn self
 	function obj:log( str, lvl )
 		checkSelf( self, 'log' )
 		checkType( 'spy object', 1, str, 'string', true )
 		checkType( 'spy object', 2, lvl, 'number', true )
 		local f = function( t )
-			table.insert( t, str, -1 )
-			mw.log( debug.traceback( table.concat( t, ': ' ), lvl or 1 ) )
+			local tmp = { str }
+			for _,v in ipairs( t ) do
+				table.insert( tmp, v )
+			end
+			if (lvl or 4) == 0 then
+				mw.log( table.concat( tmp, ': ' ) )
+			else
+				mw.log( debug.traceback( table.concat( tmp, ': ' ), lvl or 4 ) )
+			end
 		end
 		table.insert( _callbacks, f )
+		return self
 	end
 
-	--- Rise an exception
+	--- Rise an exception.
+	-- The Scribunto implementation makes it difficult to do this correctly.
+	-- @tparam nil|string str to be reported on evaluation of the compute grap
+	-- @tparam nil|number lvl to start reporting
+	-- @treturn self
 	function obj:raise( str, lvl )
 		checkSelf( self, 'raise' )
 		checkType( 'spy object', 1, str, 'string', true )
 		checkType( 'spy object', 2, lvl, 'number', true )
 		local f = function( t )
-			table.insert( t, str, -1 )
-			error( table.concat( t, ': ' ), lvl or 1 )
+			local tmp = { str }
+			for _,v in ipairs( t ) do
+				table.insert( tmp, v )
+			end
+			error( table.concat( tmp, ': ' ), lvl or 4 )
 		end
 		table.insert( _callbacks, f )
+		return self
 	end
 
 	return obj
@@ -91,6 +130,7 @@ function Spy.new( ... )
 end
 
 --- Create a new carp instance.
+-- This convenience function register a log callback.
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function Spy.newCarp( ... )
@@ -100,29 +140,36 @@ function Spy.newCarp( ... )
 end
 
 --- Create a new cluck instance.
+-- This convenience function register a log callback.
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function Spy.newCluck( ... )
 	local obj = makeSpy( ... )
-	obj:log( mw.message.new( 'doppelganger-cluck-final' ):plain(), 0 )
+	obj:log( mw.message.new( 'doppelganger-cluck-final' ):plain(), 4 )
 	return obj
 end
 
 --- Create a new croak instance.
+-- This convenience function register a raise callback.
+-- The Scribunto implementation makes it difficult to do this correctly.
+-- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function Spy.newCroak( ... )
 	local obj = makeSpy( ... )
-	obj:rise( mw.message.new( 'doppelganger-croak-final' ):plain(), 0 )
+	obj:raise( mw.message.new( 'doppelganger-croak-final' ):plain(), 0 )
 	return obj
 end
 
 --- Create a new confess instance.
+-- This convenience function register a raise callback.
+-- The Scribunto implementation makes it difficult to do this correctly.
+-- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function Spy.newConfess( ... )
 	local obj = makeSpy( ... )
-	obj:rise( mw.message.new( 'doppelganger-confess-final' ):plain(), 0 )
+	obj:raise( mw.message.new( 'doppelganger-confess-final' ):plain(), 4 )
 	return obj
 end
 
