@@ -1,5 +1,5 @@
---- Baseclass for Spy.
--- @classmod Spy
+--- Baseclass for spies.
+-- @module spy
 
 -- pure libs
 local libUtil = require 'libraryUtil'
@@ -8,25 +8,24 @@ local libUtil = require 'libraryUtil'
 local checkType = libUtil.checkType
 local makeCheckSelfFunction = libUtil.makeCheckSelfFunction
 
-
 -- @var lib var
-local Spy = {}
+local spy = {}
 
 -- @var structure used as metatable for spy
-local Meta = {}
+local Mmta = {}
 
 --- Instance is callable.
 -- This call may not return at all.
 -- Redirects to objects eval method.
 -- @tparam string text for a last minute message
 -- @treturn self
-function Meta:__call( text )
+function meta:__call( text )
 	return self:eval( text )
 end
 
 local function makeSpy( ... )
 
-	local obj = setmetatable( {}, Meta )
+	local obj = setmetatable( {}, meta )
 
 	--- Check whether method is part of self.
 	-- @local
@@ -125,7 +124,7 @@ end
 --- Create a new instance.
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
-function Spy.new( ... )
+function spy.new( ... )
 	return makeSpy( ... )
 end
 
@@ -133,7 +132,7 @@ end
 -- This convenience function register a log callback.
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
-function Spy.newCarp( ... )
+function spy.newCarp( ... )
 	local obj = makeSpy( ... )
 	obj:log( mw.message.new( 'doppelganger-carp-final' ):plain(), 0 )
 	return obj
@@ -143,7 +142,7 @@ end
 -- This convenience function register a log callback.
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
-function Spy.newCluck( ... )
+function spy.newCluck( ... )
 	local obj = makeSpy( ... )
 	obj:log( mw.message.new( 'doppelganger-cluck-final' ):plain(), 4 )
 	return obj
@@ -155,7 +154,7 @@ end
 -- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
-function Spy.newCroak( ... )
+function spy.newCroak( ... )
 	local obj = makeSpy( ... )
 	obj:raise( mw.message.new( 'doppelganger-croak-final' ):plain(), 0 )
 	return obj
@@ -167,11 +166,11 @@ end
 -- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
-function Spy.newConfess( ... )
+function spy.newConfess( ... )
 	local obj = makeSpy( ... )
 	obj:raise( mw.message.new( 'doppelganger-confess-final' ):plain(), 4 )
 	return obj
 end
 
 -- Return the final lib
-return Spy
+return spy
