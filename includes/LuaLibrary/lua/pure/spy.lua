@@ -1,5 +1,5 @@
 --- Baseclass for spies.
--- @module spy
+-- @module Spy
 
 -- pure libs
 local libUtil = require 'libraryUtil'
@@ -12,17 +12,23 @@ local makeCheckSelfFunction = libUtil.makeCheckSelfFunction
 local spy = {}
 
 -- @var structure used as metatable for spy
-local Mmta = {}
+local meta = {}
 
 --- Instance is callable.
 -- This call may not return at all.
 -- Redirects to objects eval method.
+-- @function spy:__call
 -- @tparam string text for a last minute message
 -- @treturn self
 function meta:__call( text )
 	return self:eval( text )
 end
 
+
+--- Internal creator function.
+-- @local
+-- @tparam varargs ... functions kept as callbacks, everything else as data for callback
+-- @treturn self
 local function makeSpy( ... )
 
 	local obj = setmetatable( {}, meta )
@@ -47,6 +53,7 @@ local function makeSpy( ... )
 	end
 
 	--- Evaluate graph.
+	-- @function spy:eval
 	-- @tparam nil|string text to be reported on evaluation of the compute grap
 	-- @treturn self
 	function obj:eval( text )
@@ -60,6 +67,7 @@ local function makeSpy( ... )
 	end
 
 	--- Add a callback.
+	-- @function spy:addCallback
 	-- @tparam function func to be registered on the compute graph.
 	-- @tparam nil|number index to inject the callbak
 	-- @treturn self
@@ -76,6 +84,7 @@ local function makeSpy( ... )
 	end
 
 	--- Log a traceback.
+	-- @function spy:log
 	-- @tparam nil|string text to be reported on evaluation of the compute grap
 	-- @tparam nil|number level to start reporting
 	-- @treturn self
@@ -100,6 +109,7 @@ local function makeSpy( ... )
 
 	--- Rise an exception.
 	-- The Scribunto implementation makes it difficult to do this correctly.
+	-- @function spy:raise
 	-- @tparam nil|string text to be reported on evaluation of the compute grap
 	-- @tparam nil|number level to start reporting
 	-- @treturn self
@@ -122,6 +132,7 @@ local function makeSpy( ... )
 end
 
 --- Create a new instance.
+-- @function spy.new
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function spy.new( ... )
@@ -130,6 +141,7 @@ end
 
 --- Create a new carp instance.
 -- This convenience function register a log callback.
+-- @function spy.newCarp
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function spy.newCarp( ... )
@@ -140,6 +152,7 @@ end
 
 --- Create a new cluck instance.
 -- This convenience function register a log callback.
+-- @function spy.newCluck
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
 function spy.newCluck( ... )
@@ -151,6 +164,7 @@ end
 --- Create a new croak instance.
 -- This convenience function register a raise callback.
 -- The Scribunto implementation makes it difficult to do this correctly.
+-- @function spy.newCroak
 -- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
@@ -163,6 +177,7 @@ end
 --- Create a new confess instance.
 -- This convenience function register a raise callback.
 -- The Scribunto implementation makes it difficult to do this correctly.
+-- @function spy.newConfess
 -- @raise unconditionally
 -- @tparam vararg ... arguments to be passed on
 -- @treturn self
