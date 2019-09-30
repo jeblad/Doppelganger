@@ -20,8 +20,8 @@ local Meta = {}
 -- Redirects to objects eval method.
 -- @tparam string text for a last minute message
 -- @treturn self
-function Meta:__call( str )
-	return self:eval( str )
+function Meta:__call( text )
+	return self:eval( text )
 end
 
 local function makeSpy( ... )
@@ -48,12 +48,12 @@ local function makeSpy( ... )
 	end
 
 	--- Evaluate graph.
-	-- @tparam nil|string str to be reported on evaluation of the compute grap
+	-- @tparam nil|string text to be reported on evaluation of the compute grap
 	-- @treturn self
-	function obj:eval( str )
+	function obj:eval( text )
 		checkSelf( self, 'eval' )
-		checkType( 'spy object', 1, str, 'string', true )
-		local t = { str }
+		checkType( 'spy object', 1, text, 'string', true )
+		local t = { text }
 		for _,v in ipairs( _callbacks ) do
 			v( t, unpack( _data ) )
 		end
@@ -61,15 +61,15 @@ local function makeSpy( ... )
 	end
 
 	--- Add a callback.
-	-- @tparam func to be registered on the compute graph.
-	-- @tparam nil|pos to inject the callbak
+	-- @tparam function func to be registered on the compute graph.
+	-- @tparam nil|number index to inject the callbak
 	-- @treturn self
-	function obj:addCallback( func, pos )
+	function obj:addCallback( func, index )
 		checkSelf( self, 'eval' )
 		checkType( 'spy object', 1, func, 'function', false )
-		checkType( 'spy object', 2, pos, 'number', true )
-		if pos then
-			table.insert( _callbacks, pos, func )
+		checkType( 'spy object', 2, index, 'number', true )
+		if index then
+			table.insert( _callbacks, index, func )
 		else
 			table.insert( _callbacks, func )
 		end
@@ -77,22 +77,22 @@ local function makeSpy( ... )
 	end
 
 	--- Log a traceback.
-	-- @tparam nil|string str to be reported on evaluation of the compute grap
-	-- @tparam nil|number lvl to start reporting
+	-- @tparam nil|string text to be reported on evaluation of the compute grap
+	-- @tparam nil|number level to start reporting
 	-- @treturn self
-	function obj:log( str, lvl )
+	function obj:log( text, level )
 		checkSelf( self, 'log' )
-		checkType( 'spy object', 1, str, 'string', true )
-		checkType( 'spy object', 2, lvl, 'number', true )
+		checkType( 'spy object', 1, text, 'string', true )
+		checkType( 'spy object', 2, level, 'number', true )
 		local f = function( t )
-			local tmp = { str }
+			local tmp = { text }
 			for _,v in ipairs( t ) do
 				table.insert( tmp, v )
 			end
-			if (lvl or 4) == 0 then
+			if (level or 4) == 0 then
 				mw.log( table.concat( tmp, ': ' ) )
 			else
-				mw.log( debug.traceback( table.concat( tmp, ': ' ), lvl or 4 ) )
+				mw.log( debug.traceback( table.concat( tmp, ': ' ), level or 4 ) )
 			end
 		end
 		table.insert( _callbacks, f )
@@ -101,19 +101,19 @@ local function makeSpy( ... )
 
 	--- Rise an exception.
 	-- The Scribunto implementation makes it difficult to do this correctly.
-	-- @tparam nil|string str to be reported on evaluation of the compute grap
-	-- @tparam nil|number lvl to start reporting
+	-- @tparam nil|string text to be reported on evaluation of the compute grap
+	-- @tparam nil|number level to start reporting
 	-- @treturn self
-	function obj:raise( str, lvl )
+	function obj:raise( text, level )
 		checkSelf( self, 'raise' )
-		checkType( 'spy object', 1, str, 'string', true )
-		checkType( 'spy object', 2, lvl, 'number', true )
+		checkType( 'spy object', 1, text, 'string', true )
+		checkType( 'spy object', 2, level, 'number', true )
 		local f = function( t )
-			local tmp = { str }
+			local tmp = { text }
 			for _,v in ipairs( t ) do
 				table.insert( tmp, v )
 			end
-			error( table.concat( tmp, ': ' ), lvl or 4 )
+			error( table.concat( tmp, ': ' ), level or 4 )
 		end
 		table.insert( _callbacks, f )
 		return self
