@@ -8,9 +8,9 @@ dir = 'docs'
 -- all = true
 
 readme = {
-	'topics/doppelganger.md',
+	-- 'topics/doppelganger.md',
 	'topics/vagrant.md',
-	'topics/databases.md',
+	-- 'topics/databases.md',
 	-- 'topics/delayed.md',
 	-- 'topics/hello-world.md',
 	-- 'topics/translatewiki.md',
