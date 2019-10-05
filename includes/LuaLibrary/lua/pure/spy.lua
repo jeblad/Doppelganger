@@ -57,7 +57,7 @@ local function makeSpy( ... )
 	-- @treturn self
 	function obj:eval( text )
 		checkSelf( self, 'eval' )
-		checkType( 'spy:eval', 1, text, 'string', true )
+		checkType( 'spy object', 1, text, 'string', true )
 		local t = { text }
 		for _,v in ipairs( _callbacks ) do
 			v( t, unpack( _data ) )
