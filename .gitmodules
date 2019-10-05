@@ -1,3 +1,3 @@
 [submodule "topics"]
 	path = topics
-	url = git@github.com:jeblad/Doppelganger.wiki.git
+	url = https://github.com/jeblad/Doppelganger.wiki.git
