@@ -55,7 +55,7 @@
 			"find modules/images -type d -path minified -prune -o -type d -execdir svgo --pretty --indent=2 -i . -o ./minified \\;"
 		],
 		"unit": [
-			"php ../../tests/phpunit/phpunit.php --wiki wiki --group Doppelganger"
+			"php ../../tests/phpunit/phpunit.php --wiki wiki --exclude-group LuaStandalone --group Doppelganger"
 		],
 		"codesize": [
 			"phpmd ./includes/ text codesize",
