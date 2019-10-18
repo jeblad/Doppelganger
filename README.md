@@ -3,7 +3,7 @@
 ![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg?style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues-raw/jeblad/Doppelganger?style=for-the-badge)
 
-This [extension for Mediawiki](https://www.mediawiki.org/wiki/Extension:Doppelganger) adds test stubs and doubles for use in Lua modules provided by the [Scribunto extension](https://www.mediawiki.org/wiki/Extension:Scribunto). This makes it possible to report failures clearly and visible, to facilitate interactive and collaborative fault fixing.
+This [extension for Mediawiki](https://www.mediawiki.org/wiki/Extension:Doppelganger) adds test stubs and doubles (or [doppelgängers](https://en.wikipedia.org/wiki/Doppelganger)) for use in Lua modules provided by the [Scribunto extension](https://www.mediawiki.org/wiki/Extension:Scribunto). This makes it possible to report failures clearly and visible, to facilitate interactive and collaborative fault fixing.
 
 Extensive help is available at [Doppelganger: Test stubs and doubles for Lua code embedded within Mediawiki](https://jeblad.github.io/Doppelganger/), with a programmers guide, a reference, and examples.
 
