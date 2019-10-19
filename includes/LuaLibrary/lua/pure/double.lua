@@ -8,7 +8,7 @@ local libUtil = require 'libraryUtil'
 local checkType = libUtil.checkType
 local makeCheckSelfFunction = libUtil.makeCheckSelfFunction
 
--- @var class
+-- @var lib var
 local double = {}
 
 -- @var structure used as metatable for spy
@@ -43,18 +43,18 @@ local function makeDouble( ... )
 	local _stub = nil
 
 	for i,v in ipairs( { ... } ) do
-		libUtil.checkTypeMulti( 'double dispatch', i, v, { 'table', 'boolean', 'number', 'string', 'function' } )
+		libUtil.checkTypeMulti( 'double:dispatch', i, v, { 'table', 'boolean', 'number', 'string', 'function' } )
 		local tpe = type( v )
 		if tpe == 'table' then
-			self:add( v )
+			obj:insert( v )
 		elseif tpe == 'boolean' then
-			self:add( v )
+			obj:insert( v )
 		elseif tpe == 'number' then
-			self:setLevel( v )
+			obj:setLevel( v )
 		elseif tpe == 'string' then
-			self:setName( v )
+			obj:setName( v )
 		elseif tpe == 'function' then
-			self:setOnEmpty( v )
+			obj:setOnEmpty( v )
 		end
 	end
 
@@ -63,7 +63,8 @@ local function makeDouble( ... )
 	-- @tparam nil|string name used for error reports
 	-- @treturn self
 	function obj:setName( name )
-		libUtil.checkType( 'double setLevel', 1, name, 'string', true )
+		checkSelf( self, 'setName' )
+		libUtil.checkType( 'double:setLevel', 1, name, 'string', true )
 		_name = name
 		return self
 	end
@@ -71,6 +72,7 @@ local function makeDouble( ... )
 	--- Has set name.
 	-- @treturn boolean
 	function obj:hasName()
+		checkSelf( self, 'hasName' )
 		return not not _name
 	end
 
@@ -79,7 +81,8 @@ local function makeDouble( ... )
 	-- @tparam nil|number level where to start reporting
 	-- @treturn self
 	function obj:setLevel( level )
-		libUtil.checkType( 'double setLevel', 1, level, 'number', true )
+		checkSelf( self, 'setLevel' )
+		libUtil.checkType( 'double:setLevel', 1, level, 'number', true )
 		_level = level
 		return self
 	end
@@ -87,6 +90,7 @@ local function makeDouble( ... )
 	--- Has set level.
 	-- @treturn boolean
 	function obj:hasLevel()
+		checkSelf( self, 'hasLevel' )
 		return not not _level
 	end
 
@@ -95,7 +99,8 @@ local function makeDouble( ... )
 	-- @tparam nil|function func fallback to be used in place of precomputed values
 	-- @treturn self
 	function obj:setOnEmpty( func )
-		libUtil.checkType( 'double setOnEmpty', 1, func, 'function', true )
+		checkSelf( self, 'setOnEmpty' )
+		libUtil.checkType( 'double:setOnEmpty', 1, func, 'function', true )
 		_onEmpty = func
 		return self
 	end
@@ -103,6 +108,7 @@ local function makeDouble( ... )
 	--- Has set empty fallback.
 	-- @treturn boolean
 	function obj:hasOnEmpty()
+		checkSelf( self, 'hasOnEmpty' )
 		return not not _onEmpty
 	end
 
@@ -111,6 +117,7 @@ local function makeDouble( ... )
 	-- is shifted into the values list.
 	-- @treturn boolean whether the internal values list has length zero
 	function obj:isEmpty()
+		checkSelf( self, 'isEmpty' )
 		return #_list == 0
 	end
 
@@ -119,6 +126,7 @@ local function makeDouble( ... )
 	-- is shifted into the values list.
 	-- @treturn number how deep is the internal structure
 	function obj:depth()
+		checkSelf( self, 'depth' )
 		return _list:depth()
 	end
 
@@ -126,12 +134,14 @@ local function makeDouble( ... )
 	-- This method is used for testing to inspect which types of objects exists in the values list.
 	-- @treturn table description of the internal structure
 	function obj:layout()
+		checkSelf( self, 'layout' )
 		return _list:layout()
 	end
 
-	--- Add value(s) to the list of values.
+	--- Insert value(s) to the list of values.
 	-- @treturn self facilitate chaining
-	function obj:add( ... )
+	function obj:insert( ... )
+		checkSelf( self, 'insert' )
 		_list:unshift( ... )
 		return self
 	end
@@ -139,7 +149,8 @@ local function makeDouble( ... )
 	--- Remove value from the list of values.
 	-- @treturn any item that can be put on the internal structure
 	function obj:remove( num )
-		libUtil.checkType( 'double pop', 1, num, 'number', true )
+		checkSelf( self, 'remove' )
+		libUtil.checkType( 'double:remove', 1, num, 'number', true )
 		num = num or 1
 		return _list:shift( num )
 	end
@@ -148,6 +159,7 @@ local function makeDouble( ... )
 	-- Each call to the returned closure will remove one case of values from the internal structure.
 	-- @treturn closure
 	function obj:stub()
+		checkSelf( self, 'stub' )
 		if not _stub then
 			_stub = function( ... )
 				local item = self:remove()
@@ -181,12 +193,14 @@ local function makeDouble( ... )
 	--- Has set stub function.
 	-- treturn boolean
 	function obj:hasStub()
+		checkSelf( self, 'hasStub' )
 		return not not self._stub
 	end
 
 	--- Export a list of all the contents.
 	-- @treturn table list of values
 	function obj:export()
+		checkSelf( self, 'export' )
 		local t = {}
 		for i,v in ipairs( self._bag ) do
 			t[i] = v
@@ -198,6 +212,7 @@ local function makeDouble( ... )
 	-- Note that this clears the internal storage.
 	-- @treturn table list of values
 	function obj:flush()
+		checkSelf( self, 'flush' )
 		local t = { self:export() }
 		self._bag = {}
 		return unpack( t )
